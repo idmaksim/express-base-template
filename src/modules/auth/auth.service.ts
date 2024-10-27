@@ -2,6 +2,7 @@ import { HttpException } from "../../common/exception/http.exception";
 import { PasswordService } from "../password/password.service";
 import { TokenService } from "../token/token.service";
 import { UserService } from "../user/user.service";
+import { UserRefresh } from "./dto/user.refresh.dto";
 import { UserSignIn } from "./dto/user.sign-in.dto";
 import { UserSignUp } from "./dto/user.sign-up.dto";
 
@@ -10,6 +11,20 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly userService: UserService
   ) {}
+
+  async refresh(body: UserRefresh) {
+    const payload = await this.tokenService.verifyRefreshToken(
+      body.refreshToken
+    );
+    const user = await this.userService.findByUuid(payload.uuid);
+    if (!user) {
+      throw new HttpException(401, "Unauthorized");
+    }
+    const accessToken = await this.tokenService.getAccessToken({
+      uuid: user.uuid,
+    });
+    return { accessToken };
+  }
 
   async signIn(body: UserSignIn) {
     const user = await this.userService.findByEmail(body.email);

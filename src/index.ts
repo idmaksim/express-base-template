@@ -10,9 +10,11 @@ import compression from "compression";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import passport from "passport";
 import { configurePassport } from "./modules/auth/strategies/jwt.strategy";
+import { createUserRouter } from "./modules/user/user.routes";
 
 async function initRoutes(app: Express) {
   app.use("/auth", createAuthRouter());
+  app.use("/user", createUserRouter());
 }
 
 async function main() {

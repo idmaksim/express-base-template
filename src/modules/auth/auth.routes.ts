@@ -9,6 +9,7 @@ import { TokenService } from "../token/token.service";
 import { UserService } from "../user/user.service";
 import { UserRepository } from "../user/user.repository";
 import asyncHandler from "express-async-handler";
+import { UserRefreshDto } from "./dto/user.refresh.dto";
 
 export const createAuthRouter = (): Router => {
   const router = Router();
@@ -27,6 +28,11 @@ export const createAuthRouter = (): Router => {
     "/sign-up",
     validateDtoMiddleware(UserSignUpDto),
     asyncHandler(authController.signUp.bind(authController))
+  );
+  router.post(
+    "/refresh",
+    validateDtoMiddleware(UserRefreshDto),
+    asyncHandler(authController.refresh.bind(authController))
   );
 
   logger.info("Auth routes initialized");

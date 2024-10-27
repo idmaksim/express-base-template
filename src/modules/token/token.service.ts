@@ -19,6 +19,8 @@ export class TokenService {
   }
 
   async verifyRefreshToken(token: string) {
-    return jwt.verify(token, config.jwtRefreshSecret as jwt.Secret);
+    return jwt.verify(token, config.jwtRefreshSecret as jwt.Secret) as {
+      uuid: string;
+    };
   }
 }

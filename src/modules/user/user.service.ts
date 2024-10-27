@@ -23,4 +23,12 @@ export class UserService {
     const hashedPassword = await PasswordService.hashPassword(user.password);
     return this.userRepository.create({ ...user, password: hashedPassword });
   }
+
+  async findByUuid(uuid: string) {
+    const user = await this.userRepository.findOneBy({ uuid });
+    if (!user) {
+      throw new HttpException(404, "User not found");
+    }
+    return user;
+  }
 }
