@@ -9,6 +9,113 @@ This repository serves as a template for backend projects using Express and Type
 - **OOP Design**: The project is structured using Object-Oriented Programming principles, promoting code reusability and modularity.
 - **Validation**: Input validation is implemented using Zod, a TypeScript-first schema declaration and validation library. Additionally, validation can also be performed using `class-validator`.
 - **Prisma**: Prisma is used as an ORM to interact with the database.
+- **Swagger Documentation**: Automatic API documentation generation using Swagger.
+- **JWT Authentication**: Custom authentication using JWT to secure the API.
+
+## Swagger Documentation
+
+Swagger is used to automatically generate API documentation. Here's how it's organized in the project:
+
+### File Locations
+
+- **Swagger Configuration**: Located in `src/config/swaggerConfig.ts`. This file contains the main settings for Swagger, including API version, security information, and DTO schemas.
+
+- **DTO Schemas for Swagger**: Located in `src/common/swagger/auth.dto.ts`. This file defines the data structures used in the Swagger documentation.
+
+### How to Write Swagger Documentation
+
+- **Swagger Configuration**:
+
+  - In `swaggerConfig.ts`, define the general settings for Swagger, including security schemes and API paths.
+  - Example configuration:
+
+    ```typescript
+    import { Options } from "swagger-jsdoc";
+    import {
+      UserSignInDto,
+      UserSignUpDto,
+      UserRefreshDto,
+    } from "../common/swagger/auth.dto";
+
+    const swaggerOptions: Options = {
+      swaggerDefinition: {
+        openapi: "3.0.0",
+        info: {
+          title: "Express API",
+          version: "1.0.0",
+          description: "API documentation for the Express project",
+        },
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT",
+            },
+          },
+          schemas: {
+            UserSignInDto,
+            UserSignUpDto,
+            UserRefreshDto,
+          },
+        },
+      },
+      apis: ["./src/**/*.ts"],
+    };
+
+    export default swaggerOptions;
+    ```
+
+- **DTO Schemas**:
+
+  - In `auth.dto.ts`, describe the data structures used in the API.
+  - These schemas are then referenced in the Swagger configuration.
+  - Example DTO schema:
+    ```typescript
+    export const UserSignInDto = {
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+          format: "email",
+        },
+        password: {
+          type: "string",
+        },
+      },
+      required: ["email", "password"],
+    };
+    ```
+
+- **Route Annotations**:
+  - In route files like `auth.routes.ts`, add Swagger annotations for each route.
+  - This allows automatic generation of documentation for each endpoint.
+  - Example annotation:
+    ```typescript
+    /**
+     * @swagger
+     * /auth/sign-in:
+     *   post:
+     *     summary: Sign in
+     *     tags: [Auth]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/UserSignInDto'
+     *     responses:
+     *       200:
+     *         description: Successful sign in
+     */
+    router.post(
+      "/sign-in",
+      validateDtoMiddleware(UserSignInDto),
+      asyncHandler(authController.signIn.bind(authController))
+    );
+    ```
+
+These elements together ensure that your API documentation is up-to-date and detailed, automatically reflecting changes in the code.
 
 ## Validation
 
@@ -107,7 +214,3 @@ This will compile the TypeScript code and start the server using Node.js.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-```
-
-```
