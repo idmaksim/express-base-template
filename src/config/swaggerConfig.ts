@@ -13,8 +13,14 @@ const swaggerOptions: Options = {
       version: "1.0.0",
       description: "API documentation for the Express project",
     },
-    swagger: "2.0.0",
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
       schemas: {
         UserSignInDto,
         UserSignUpDto,

@@ -21,6 +21,14 @@ export const authJwtMiddleware = async (
     where: {
       uuid: decoded.uuid,
     },
+    select: {
+      uuid: true,
+      email: true,
+      isBanned: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   if (!user) {
     throw new HttpException(401, "Unauthorized");

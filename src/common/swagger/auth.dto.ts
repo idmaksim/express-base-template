@@ -33,4 +33,5 @@ export const UserRefreshDto = {
       type: "string",
     },
   },
+  required: ["refreshToken"],
 };

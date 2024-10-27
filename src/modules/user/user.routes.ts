@@ -4,6 +4,7 @@ import { UserService } from "./user.service";
 import { UserRepository } from "./user.repository";
 import { authJwtMiddleware } from "../../common/middlewares/auth-jwt.middleware";
 import asyncHandler from "express-async-handler";
+import { isActiveMiddleware } from "../../common/middlewares/is-active.middleware";
 
 export const createUserRouter = (): Router => {
   const router = Router();
@@ -20,10 +21,13 @@ export const createUserRouter = (): Router => {
    *     responses:
    *       200:
    *         description: User information
+   *     security:
+   *       - bearerAuth: true
    */
   router.get(
     "/self",
     asyncHandler(authJwtMiddleware),
+    asyncHandler(isActiveMiddleware),
     asyncHandler(userController.self.bind(userController))
   );
 

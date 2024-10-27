@@ -26,6 +26,7 @@ async function main() {
   app.use(cors());
   app.use(helmet());
   app.use(compression());
+
   await initRoutes(app);
 
   const swaggerDocs = swaggerJsDoc(swaggerConfig);
