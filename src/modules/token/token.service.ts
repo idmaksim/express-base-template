@@ -15,7 +15,9 @@ export class TokenService {
   }
 
   async verifyAccessToken(token: string) {
-    return jwt.verify(token, config.jwtAccessSecret as jwt.Secret);
+    return jwt.verify(token, config.jwtAccessSecret as jwt.Secret) as {
+      uuid: string;
+    };
   }
 
   async verifyRefreshToken(token: string) {
