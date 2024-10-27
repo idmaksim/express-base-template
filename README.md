@@ -181,6 +181,24 @@ export const TwitCreateDto = z.object({
 });
 ```
 
+## Environment Variables
+
+To ensure the project runs correctly, create a `.env` file in the root directory and declare the following environment variables:
+
+- **PORT**: The port on which the server will run. In this setup, it is set to 3000.
+- **DATABASE_URL**: The URL for connecting to the PostgreSQL database. Used by Prisma to interact with the database. Example: `postgresql://<username>:<password>@<host>:<port>/<database>`.
+- **JWT_ACCESS_SECRET**: The secret key for signing access JWT tokens. Ensures authentication security.
+- **JWT_REFRESH_SECRET**: The secret key for signing refresh JWT tokens. Used to refresh access tokens securely.
+
+Example `.env` file:
+
+```
+PORT=3000
+DATABASE_URL="postgresql://<username>:<password>@<host>:<port>/<database>"
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+```
+
 ## Getting Started
 
 To start using this template, clone the repository and install the dependencies:
