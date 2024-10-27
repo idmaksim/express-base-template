@@ -11,6 +11,16 @@ export const createUserRouter = (): Router => {
   const userService = new UserService(userRepository);
   const userController = new UserController(userService);
 
+  /**
+   * @swagger
+   * /user/self:
+   *   get:
+   *     summary: Get user information
+   *     tags: [User]
+   *     responses:
+   *       200:
+   *         description: User information
+   */
   router.get(
     "/self",
     asyncHandler(authJwtMiddleware),

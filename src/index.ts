@@ -9,6 +9,9 @@ import helmet from "helmet";
 import compression from "compression";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createUserRouter } from "./modules/user/user.routes";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import swaggerConfig from "./config/swaggerConfig";
 
 async function initRoutes(app: Express) {
   app.use("/auth", createAuthRouter());
@@ -24,6 +27,9 @@ async function main() {
   app.use(helmet());
   app.use(compression());
   await initRoutes(app);
+
+  const swaggerDocs = swaggerJsDoc(swaggerConfig);
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
   app.all("*", async (req: Request, res: Response) => {
     res.status(404).send({ message: "not found" });

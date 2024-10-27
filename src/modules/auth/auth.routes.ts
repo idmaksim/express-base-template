@@ -19,16 +19,66 @@ export const createAuthRouter = (): Router => {
   const authService = new AuthService(tokenService, userService);
   const authController = new AuthController(authService);
 
+  /**
+   * @swagger
+   * /auth/sign-in:
+   *   post:
+   *     summary: Sign in
+   *     tags: [Auth]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UserSignInDto'
+   *     responses:
+   *       200:
+   *         description: Successful sign in
+   */
   router.post(
     "/sign-in",
     validateDtoMiddleware(UserSignInDto),
     asyncHandler(authController.signIn.bind(authController))
   );
+
+  /**
+   * @swagger
+   * /auth/sign-up:
+   *   post:
+   *     summary: Sign up
+   *     tags: [Auth]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UserSignUpDto'
+   *     responses:
+   *       200:
+   *         description: Successful sign up
+   */
   router.post(
     "/sign-up",
     validateDtoMiddleware(UserSignUpDto),
     asyncHandler(authController.signUp.bind(authController))
   );
+
+  /**
+   * @swagger
+   * /auth/refresh:
+   *   post:
+   *     summary: Refresh
+   *     tags: [Auth]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UserRefreshDto'
+   *     responses:
+   *       200:
+   *         description: Successful refresh
+   */
   router.post(
     "/refresh",
     validateDtoMiddleware(UserRefreshDto),
