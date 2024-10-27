@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { config } from "../../config/config";
+import { JwtPayload } from "../../common/types/jwt-payload";
 
 export class TokenService {
   async getAccessToken(payload: any) {
@@ -14,15 +15,17 @@ export class TokenService {
     });
   }
 
-  async verifyAccessToken(token: string) {
-    return jwt.verify(token, config.jwtAccessSecret as jwt.Secret) as {
-      uuid: string;
-    };
+  async verifyAccessToken(token: string): Promise<JwtPayload> {
+    return jwt.verify(
+      token,
+      config.jwtAccessSecret as jwt.Secret
+    ) as JwtPayload;
   }
 
-  async verifyRefreshToken(token: string) {
-    return jwt.verify(token, config.jwtRefreshSecret as jwt.Secret) as {
-      uuid: string;
-    };
+  async verifyRefreshToken(token: string): Promise<JwtPayload> {
+    return jwt.verify(
+      token,
+      config.jwtRefreshSecret as jwt.Secret
+    ) as JwtPayload;
   }
 }

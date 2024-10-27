@@ -2,7 +2,8 @@ import { Router } from "express";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { UserRepository } from "./user.repository";
-import passport from "passport";
+import { authJwtMiddleware } from "../../common/middlewares/auth-jwt.middleware";
+import asyncHandler from "express-async-handler";
 
 export const createUserRouter = (): Router => {
   const router = Router();
@@ -12,10 +13,8 @@ export const createUserRouter = (): Router => {
 
   router.get(
     "/self",
-    passport.authenticate("jwt", {
-      session: false,
-    }),
-    userController.self.bind(userController)
+    asyncHandler(authJwtMiddleware),
+    asyncHandler(userController.self.bind(userController))
   );
 
   return router;

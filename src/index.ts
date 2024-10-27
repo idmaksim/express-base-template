@@ -8,8 +8,6 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import { createAuthRouter } from "./modules/auth/auth.routes";
-import passport from "passport";
-import { configurePassport } from "./modules/auth/strategies/jwt.strategy";
 import { createUserRouter } from "./modules/user/user.routes";
 
 async function initRoutes(app: Express) {
@@ -22,12 +20,9 @@ async function main() {
 
   app.use(express.json());
   app.use(requestLoggerMiddleware);
-  app.use(passport.initialize());
   app.use(cors());
   app.use(helmet());
   app.use(compression());
-
-  await configurePassport(passport);
   await initRoutes(app);
 
   app.all("*", async (req: Request, res: Response) => {

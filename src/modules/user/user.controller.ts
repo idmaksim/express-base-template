@@ -6,6 +6,6 @@ export class UserController {
 
   async self(req: Request, res: Response) {
     const user = req.user as User;
-    return res.json(user);
+    res.json(user);
   }
 }
