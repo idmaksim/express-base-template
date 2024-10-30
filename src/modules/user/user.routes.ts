@@ -27,7 +27,7 @@ export const createUserRouter = (): Router => {
   router.get(
     "/self",
     asyncHandler(authJwtMiddleware({ repo: userRepository })),
-    asyncHandler(isActiveMiddleware({ repo: userRepository })),
+    asyncHandler(isActiveMiddleware),
     asyncHandler(userController.self.bind(userController))
   );
 
