@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { config } from "../../config/config";
 import { JwtPayload } from "../../common/types/jwt-payload";
+import { HttpException } from "../../common/exception/http.exception";
 
 export class TokenService {
   async getAccessToken(payload: any) {
@@ -16,10 +17,14 @@ export class TokenService {
   }
 
   async verifyAccessToken(token: string): Promise<JwtPayload> {
-    return jwt.verify(
-      token,
-      config.jwtAccessSecret as jwt.Secret
-    ) as JwtPayload;
+    try {
+      return jwt.verify(
+        token,
+        config.jwtAccessSecret as jwt.Secret
+      ) as JwtPayload;
+    } catch (error) {
+      throw new HttpException(401, "Unauthorized");
+    }
   }
 
   async verifyRefreshToken(token: string): Promise<JwtPayload> {
