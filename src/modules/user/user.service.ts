@@ -3,13 +3,15 @@ import { HttpException } from "../../common/exception/http.exception";
 import { UserSignUp } from "../auth/dto/user.sign-up.dto";
 import { PasswordService } from "../password/password.service";
 import { UserRepository } from "./user.repository";
+import { User } from "@prisma/client";
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async findByEmail(email: string) {
-    await this.ensureExistsByEmail(email, "not-found");
-    return this.userRepository.findOneByEmail(email);
+    const user = await this.userRepository.findOneByEmail(email);
+    await this.ensureUserNotNull(user);
+    return user as User;
   }
 
   async create(user: UserSignUp) {
@@ -56,6 +58,12 @@ export class UserService {
         if (exists) {
           throw new HttpException(409, "User already exists");
         }
+    }
+  }
+
+  private async ensureUserNotNull(user: User | null) {
+    if (!user) {
+      throw new HttpException(404, "User not found");
     }
   }
 }
