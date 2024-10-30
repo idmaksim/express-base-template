@@ -4,13 +4,13 @@ import { JwtPayload } from "../../common/types/jwt-payload";
 import { HttpException } from "../../common/exception/http.exception";
 
 export class TokenService {
-  async getAccessToken(payload: any) {
+  async getAccessToken(payload: object) {
     return jwt.sign(payload, config.jwtAccessSecret as jwt.Secret, {
       expiresIn: "1h",
     });
   }
 
-  async getRefreshToken(payload: any) {
+  async getRefreshToken(payload: object) {
     return jwt.sign(payload, config.jwtRefreshSecret as jwt.Secret, {
       expiresIn: "7d",
     });

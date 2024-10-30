@@ -1,12 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { HttpException } from "../exception/http.exception";
 
-export const errorHandler = (
-  err: any,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const errorHandler = (err: Error, req: Request, res: Response) => {
   if (err instanceof HttpException) {
     return res.status(err.statusCode).json({ error: err.message });
   }

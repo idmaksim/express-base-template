@@ -1,4 +1,3 @@
-import { NextFunction } from "express";
 import { HttpException } from "../../common/exception/http.exception";
 import { UserSignUp } from "../auth/dto/user.sign-up.dto";
 import { PasswordService } from "../password/password.service";
