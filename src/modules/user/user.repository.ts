@@ -1,20 +1,33 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import prismaClient from "../../common/prisma/client";
+import { UserSignIn } from "../auth/dto/user.sign-in.dto";
 
 export class UserRepository {
   constructor(private readonly prisma: PrismaClient = prismaClient) {}
 
-  async create(data: Prisma.UserCreateInput) {
+  async create(data: UserSignIn) {
     return this.prisma.user.create({ data });
   }
 
-  async findOneBy(where: Prisma.UserWhereInput) {
-    return this.prisma.user.findFirst({ where });
+  async findOneByEmail(email: string) {
+    return this.prisma.user.findFirst({ where: { email } });
   }
 
-  async exists(where: Prisma.UserWhereInput) {
+  async findOneByUuid(uuid: string) {
+    return this.prisma.user.findFirst({ where: { uuid } });
+  }
+
+  async existsByEmail(email: string) {
     const user = await this.prisma.user.findFirst({
-      where,
+      where: { email },
+      select: { uuid: true },
+    });
+    return !!user;
+  }
+
+  async existsByUuid(uuid: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { uuid },
       select: { uuid: true },
     });
     return !!user;

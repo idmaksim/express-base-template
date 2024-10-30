@@ -8,27 +8,54 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async findByEmail(email: string) {
-    const user = await this.userRepository.findOneBy({ email });
-    if (!user) {
-      throw new HttpException(404, "User not found");
-    }
-    return user;
+    await this.ensureExistsByEmail(email, "not-found");
+    return this.userRepository.findOneByEmail(email);
   }
 
   async create(user: UserSignUp) {
-    const exists = await this.userRepository.exists({ email: user.email });
-    if (exists) {
-      throw new HttpException(409, "User already exists");
-    }
+    await this.ensureExistsByEmail(user.email, "conflict");
     const hashedPassword = await PasswordService.hashPassword(user.password);
     return this.userRepository.create({ ...user, password: hashedPassword });
   }
 
   async findByUuid(uuid: string) {
-    const user = await this.userRepository.findOneBy({ uuid });
-    if (!user) {
-      throw new HttpException(404, "User not found");
+    await this.ensureExistsByUuid(uuid, "not-found");
+    return this.userRepository.findOneByUuid(uuid);
+  }
+
+  private async ensureExistsByEmail(
+    email: string,
+    error: "conflict" | "not-found"
+  ) {
+    const exists = await this.userRepository.existsByEmail(email);
+    switch (error) {
+      case "conflict":
+        if (exists) {
+          throw new HttpException(409, "User already exists");
+        }
+        break;
+      case "not-found":
+        if (!exists) {
+          throw new HttpException(404, "User not found");
+        }
     }
-    return user;
+  }
+
+  private async ensureExistsByUuid(
+    uuid: string,
+    error: "not-found" | "conflict"
+  ) {
+    const exists = await this.userRepository.existsByUuid(uuid);
+    switch (error) {
+      case "not-found":
+        if (!exists) {
+          throw new HttpException(404, "User not found");
+        }
+        break;
+      case "conflict":
+        if (exists) {
+          throw new HttpException(409, "User already exists");
+        }
+    }
   }
 }
