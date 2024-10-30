@@ -5,11 +5,13 @@ import { UserRepository } from "../../modules/user/user.repository";
 
 interface AuthJwtDependencies {
   repo: UserRepository;
+  tokenService: TokenService;
 }
 
-export const authJwtMiddleware = ({ repo }: AuthJwtDependencies) => {
-  const tokenService = new TokenService();
-
+export const authJwtMiddleware = ({
+  repo,
+  tokenService,
+}: AuthJwtDependencies) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
