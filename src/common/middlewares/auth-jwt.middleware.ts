@@ -24,7 +24,7 @@ export const authJwtMiddleware = ({
     }
 
     const decoded = await tokenService.verifyAccessToken(token);
-    const user = await repo.findOneByUuid(decoded.uuid);
+    const user = await repo.findOneById(decoded.id);
 
     if (!user) {
       throw new HttpException(401, "Unauthorized");

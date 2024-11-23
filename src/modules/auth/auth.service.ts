@@ -16,12 +16,12 @@ export class AuthService {
     const payload = await this.tokenService.verifyRefreshToken(
       body.refreshToken
     );
-    const user = await this.userService.findByUuid(payload.uuid);
+    const user = await this.userService.findOneById(payload.id);
     if (!user) {
       throw new HttpException(401, "Unauthorized");
     }
     const accessToken = await this.tokenService.getAccessToken({
-      uuid: user.uuid,
+      id: user.id,
     });
     return { accessToken };
   }
@@ -36,10 +36,10 @@ export class AuthService {
       throw new HttpException(401, "Invalid password");
     }
     const accessToken = await this.tokenService.getAccessToken({
-      uuid: user.uuid,
+      id: user.id,
     });
     const refreshToken = await this.tokenService.getRefreshToken({
-      uuid: user.uuid,
+      id: user.id,
     });
     return { accessToken, refreshToken };
   }
@@ -47,10 +47,10 @@ export class AuthService {
   async signUp(body: UserSignUp) {
     const user = await this.userService.create(body);
     const accessToken = await this.tokenService.getAccessToken({
-      uuid: user.uuid,
+      id: user.id,
     });
     const refreshToken = await this.tokenService.getRefreshToken({
-      uuid: user.uuid,
+      id: user.id,
     });
     return { accessToken, refreshToken };
   }

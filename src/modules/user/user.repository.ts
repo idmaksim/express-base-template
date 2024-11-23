@@ -16,9 +16,9 @@ export class UserRepository {
     });
   }
 
-  async findOneByUuid(uuid: string) {
+  async findOneById(id: string) {
     return this.prisma.user.findFirst({
-      where: { uuid },
+      where: { id },
       select: this.getUserSelect(),
     });
   }
@@ -26,22 +26,22 @@ export class UserRepository {
   async existsByEmail(email: string) {
     const user = await this.prisma.user.findFirst({
       where: { email },
-      select: { uuid: true },
+      select: { id: true },
     });
     return !!user;
   }
 
-  async existsByUuid(uuid: string) {
+  async existsById(id: string) {
     const user = await this.prisma.user.findFirst({
-      where: { uuid },
-      select: { uuid: true },
+      where: { id },
+      select: { id: true },
     });
     return !!user;
   }
 
   private getUserSelect(): Prisma.UserSelect {
     return {
-      uuid: true,
+      id: true,
       email: true,
       isActive: true,
       isBanned: true,

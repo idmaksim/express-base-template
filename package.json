@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx nodemon",
+    "build": "tsc",
     "prod": "tsc && node dist/index.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",

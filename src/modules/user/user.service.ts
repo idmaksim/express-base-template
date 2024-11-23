@@ -19,9 +19,9 @@ export class UserService {
     return this.userRepository.create({ ...user, password: hashedPassword });
   }
 
-  async findByUuid(uuid: string) {
-    await this.ensureExistsByUuid(uuid, "not-found");
-    return this.userRepository.findOneByUuid(uuid);
+  async findOneById(id: string) {
+    await this.ensureExistsById(id, "not-found");
+    return this.userRepository.findOneById(id);
   }
 
   private async ensureExistsByEmail(
@@ -42,11 +42,8 @@ export class UserService {
     }
   }
 
-  private async ensureExistsByUuid(
-    uuid: string,
-    error: "not-found" | "conflict"
-  ) {
-    const exists = await this.userRepository.existsByUuid(uuid);
+  private async ensureExistsById(id: string, error: "not-found" | "conflict") {
+    const exists = await this.userRepository.existsById(id);
     switch (error) {
       case "not-found":
         if (!exists) {
